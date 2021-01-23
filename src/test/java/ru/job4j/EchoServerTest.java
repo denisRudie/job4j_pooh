@@ -2,7 +2,10 @@ package ru.job4j;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -11,6 +14,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class EchoServerTest {
 
@@ -138,5 +143,26 @@ public class EchoServerTest {
 
         assertEquals(consumer1Data, consumer2Data);
         assertEquals(consumer1Data, producedItems.keySet());
+    }
+
+    @Test
+    public void test() throws IOException {
+        EchoServer server = mock(EchoServer.class);
+        ThreadPool pool = mock(ThreadPool.class);
+
+        Socket client = mock(Socket.class);
+
+        ByteArrayInputStream in = new ByteArrayInputStream("POST /queue/hello".getBytes());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        when(client.getInputStream()).thenReturn(in);
+        when(client.getOutputStream()).thenReturn(out);
+
+        server.start();
+
+
+        ConnectionIO conn = mock(ConnectionIO.class);
+        when(conn.readLine()).thenReturn("Hello");
+        System.out.println(conn.readLine());
     }
 }

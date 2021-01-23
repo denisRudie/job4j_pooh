@@ -57,6 +57,10 @@ public class ThreadPool {
         executor.execute(r);
     }
 
+    protected Future<Item> submit(Callable<Item> r) {
+        return executor.submit(r);
+    }
+
     /**
      * Return to client the last element from his local topic.
      * If topic is empty return message.
